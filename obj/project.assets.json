@@ -604,11 +604,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Unip\\projetos\\ProjetoAgenda\\ProjetoAgenda.csproj",
+      "projectUniqueName": "C:\\Users\\Unip\\AgendaDesktop\\ProjetoAgenda.csproj",
       "projectName": "ProjetoAgenda",
-      "projectPath": "C:\\Users\\Unip\\projetos\\ProjetoAgenda\\ProjetoAgenda.csproj",
+      "projectPath": "C:\\Users\\Unip\\AgendaDesktop\\ProjetoAgenda.csproj",
       "packagesPath": "C:\\Users\\Unip\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Unip\\projetos\\ProjetoAgenda\\obj\\",
+      "outputPath": "C:\\Users\\Unip\\AgendaDesktop\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Unip\\AppData\\Roaming\\NuGet\\NuGet.Config"

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3MP4SQf5Up5WeUOmxaXWxiNSKCO88Cj61cJva8g/ybJUHHSWhss7DIkO3to2l/3IMcdSF3GlRALyxqWvVWMFug==",
+  "dgSpecHash": "RK8oM+3/iPl3YNCFhyGHtU0RAIJy6fzfnK95aKcS9Jv2wgG+G+VbjLHxfi/sEdIhJ25zOcMtA4JY9qqDn5VqFw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Unip\\projetos\\ProjetoAgenda\\ProjetoAgenda.csproj",
+  "projectFilePath": "C:\\Users\\Unip\\AgendaDesktop\\ProjetoAgenda.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Unip\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
     "C:\\Users\\Unip\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\2.0.0\\microsoft.extensions.logging.abstractions.2.0.0.nupkg.sha512",

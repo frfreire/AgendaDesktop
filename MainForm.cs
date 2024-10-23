@@ -12,6 +12,13 @@ public partial class MainForm : Form
     {
         _mongoService = new MongoDBService();
        InitializeComponent();
+
+    }
+
+    protected override async void OnLoad(EventArgs e)
+    {
+        base.OnLoad(e);
+        await LoadData();
     }
 
     private void InitializeComponent()
@@ -33,7 +40,6 @@ public partial class MainForm : Form
             Text = "Salvar",
             Location = new Point(20, 120),
             Size = new Size(80, 30)
-
         };
         btnSalvar.Click += async (s, e) => await SalvarPessoa();
 
@@ -42,7 +48,6 @@ public partial class MainForm : Form
             Text = "Atualizar",
             Location = new Point(110, 120),
             Size = new Size(80, 30)
-
         };
         btnAtualizar.Click += async (s, e) => await AtualizarPessoa();
 
@@ -51,7 +56,6 @@ public partial class MainForm : Form
             Text = "Excluir",
             Location = new Point(200, 120),
             Size = new Size(80, 30)
-
         };
         btnExcluir.Click += async (s, e) => await ExcluirPessoa();
 
@@ -60,13 +64,11 @@ public partial class MainForm : Form
             Text = "Limpar",
             Location = new Point(290, 120),
             Size = new Size(80, 30)
-
         };
         btnLimpar.Click += (s, e) => LimparTela();
 
         dgvPessoa = new DataGridView()
         {
-
             Location = new Point(20, 170),
             Size = new Size(740, 250),
             AllowUserToAddRows = false,
@@ -75,7 +77,6 @@ public partial class MainForm : Form
             SelectionMode = DataGridViewSelectionMode.FullRowSelect,
             MultiSelect = false,
             AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-
         };
         dgvPessoa.SelectionChanged += DgvPessoa_SelectionChanged;
 
@@ -84,7 +85,6 @@ public partial class MainForm : Form
             txtNome, txtEmail, txtIdade,
             btnSalvar, btnAtualizar, btnExcluir, btnLimpar,
             dgvPessoa
-
         });
         
     }
@@ -93,16 +93,22 @@ public partial class MainForm : Form
     {
         try
         {
-            var pessoa = new Pessoa
-            {
-                Nome = txtNome.Text,
-                Idade = int.Parse(txtIdade.Text),
-                Email = txtEmail.Text
-            };
-            await _mongoService.CriarPessoaAsync(pessoa);
-            await LoadData();
-            LimparTela();
-            MessageBox.Show("Pessoa salva com sucesso!!!!");
+            if(ValidarCampos()){
+
+                var pessoa = new Pessoa
+                {
+                    Nome = txtNome.Text,
+                    Idade = int.Parse(txtIdade.Text),
+                    Email = txtEmail.Text
+                };
+
+                await _mongoService.CriarPessoaAsync(pessoa);
+                await LoadData();
+                LimparTela();
+                MessageBox.Show("Pessoa salva com sucesso!!!!");
+                
+            }
+            
 
         }
         catch (Exception ex)
@@ -114,8 +120,16 @@ public partial class MainForm : Form
 
     private async Task LoadData()
     {
-        var pessoa = _mongoService.GetPessoasAsync();
-        dgvPessoa.DataSource = pessoa;
+        try 
+        {
+            var pessoas = await _mongoService.GetPessoasAsync();
+            dgvPessoa.DataSource = null; 
+            dgvPessoa.DataSource = pessoas.ToList(); 
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Erro ao carregar dados: {ex.Message}");
+        }
     }
 
     private async Task AtualizarPessoa(){
@@ -130,17 +144,48 @@ public partial class MainForm : Form
         txtEmail.Text = "";
         txtIdade.Text = "";
         txtNome.Text = "";
+        selectedId = null;
+        btnSalvar.Enabled = true;
+        btnAtualizar.Enabled = true;
     }
 
     private void DgvPessoa_SelectionChanged(object sender, EventArgs e)
     {
-        if(dgvPessoa.CurrentRow != null){
+        if (dgvPessoa.CurrentRow != null)
+        {
             var pessoa = (Pessoa)dgvPessoa.CurrentRow.DataBoundItem;
             selectedId = pessoa.Id;
             txtNome.Text = pessoa.Nome;
             txtEmail.Text = pessoa.Email;
             txtIdade.Text = pessoa.Idade.ToString();
         }
+    }
+
+    private bool ValidarCampos()
+    {
+        if (string.IsNullOrWhiteSpace(txtNome.Text))
+        {
+            MessageBox.Show("O campo nome não pode ficar em branco");
+            txtNome.Focus();
+            return false;
+        }
+
+        if (!int.TryParse(txtIdade.Text, out int idade) || idade <= 0)
+        {
+            MessageBox.Show("O campo idade deve ser um número válido maior que zero");
+            txtIdade.Focus();
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(txtEmail.Text))
+        {
+            MessageBox.Show("O email é obrigatório");
+            txtEmail.Focus();
+            return false;
+        }
+
+        return true;
+        
     }
 
 }

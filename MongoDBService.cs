@@ -13,8 +13,12 @@ namespace ProjetoAgenda
 
         public MongoDBService()
         {
+            //Cria uma conexão com o MongoDB, usando MongoClient
             var mongoCliente = new MongoClient("mongodb://localhost:27017");
+            //Recupera do database um banco chamado agendaDB
             var mongoDatabase = mongoCliente.GetDatabase("agendaDB");
+            //Passa para uma collection do tipo "Pessoa", uma collection chamada "pessoa"
+            //que estava no MongoDBs
             _pessoaCollection = mongoDatabase.GetCollection<Pessoa>("pessoa");
         }
         
@@ -31,6 +35,16 @@ namespace ProjetoAgenda
         public async Task CriarPessoaAsync(Pessoa pessoa)
         {
             await _pessoaCollection.InsertOneAsync(pessoa);
+        }
+
+        public async Task AtualizarPessoaAsync(Pessoa pessoa)
+        {
+            await _pessoaCollection.ReplaceOneAsync(x => x.Id == pessoa.Id, pessoa);
+        }
+
+        public async Task ExcluirPessoaAsync(string id)
+        {
+            await _pessoaCollection.DeleteOneAsync(x => x.Id == id);
         }
     }
 }
