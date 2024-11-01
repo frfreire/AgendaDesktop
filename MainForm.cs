@@ -134,10 +134,59 @@ public partial class MainForm : Form
 
     private async Task AtualizarPessoa(){
         
+         try
+        {
+            if (selectedId == null)
+            {
+                MessageBox.Show("Selecione uma pessoa para atualizar!");
+                return;
+            }
+
+            if (ValidarCampos())
+            {
+                var pessoa = new Pessoa
+                {
+                    Id = selectedId,
+                    Nome = txtNome.Text,
+                    Idade = int.Parse(txtIdade.Text),
+                    Email = txtEmail.Text
+                };
+
+                await _mongoService.AtualizarPessoaAsync(pessoa);
+                await LoadData();
+                LimparTela();
+                MessageBox.Show("Pessoa atualizada com sucesso!!!!");
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Erro ao atualizar: {ex.Message}");
+        }
     }
 
     private async Task ExcluirPessoa(){
         
+         try
+        {
+            if (selectedId == null)
+            {
+                MessageBox.Show("Selecione uma pessoa para excluir!");
+                return;
+            }
+
+            if (MessageBox.Show("Deseja realmente excluir esta pessoa?", "Confirmação",
+                MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                await _mongoService.ExcluirPessoaAsync(selectedId);
+                await LoadData();
+                LimparTela();
+                MessageBox.Show("Pessoa excluída com sucesso!");
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Erro ao excluir: {ex.Message}");
+        }
     }
 
     private void LimparTela(){
